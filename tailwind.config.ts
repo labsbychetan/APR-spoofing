@@ -44,7 +44,6 @@ const config: Config = {
           "monospace",
         ],
         sans: [
-          "Plus Jakarta Sans",
           "Inter",
           "-apple-system",
           "BlinkMacSystemFont",

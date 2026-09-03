@@ -411,29 +411,29 @@ export default function SOCDashboardPage() {
                       </div>
                     </div>
 
-                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs font-mono">
-                      <div>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-3 text-xs font-mono">
+                      <div className="min-w-0">
                         <span className="text-slate-400 text-[10px] block font-sans font-medium">BROWSER:</span>
                         <span className="text-slate-900 font-semibold truncate block">
                           {evt.clientTelemetry.browser.family}
                         </span>
                       </div>
 
-                      <div>
+                      <div className="min-w-0">
                         <span className="text-slate-400 text-[10px] block font-sans font-medium">SCREEN / VIEWPORT:</span>
                         <span className="text-slate-700 truncate block">
                           {evt.clientTelemetry.display.screenWidth}x{evt.clientTelemetry.display.screenHeight} ({evt.clientTelemetry.display.viewportWidth}x{evt.clientTelemetry.display.viewportHeight})
                         </span>
                       </div>
 
-                      <div>
+                      <div className="min-w-0">
                         <span className="text-slate-400 text-[10px] block font-sans font-medium">TIMEZONE / LOCALE:</span>
                         <span className="text-slate-700 truncate block">
                           {evt.clientTelemetry.browser.timezone} ({evt.clientTelemetry.browser.language})
                         </span>
                       </div>
 
-                      <div>
+                      <div className="min-w-0">
                         <span className="text-slate-400 text-[10px] block font-sans font-medium">NETWORK PROXY IP:</span>
                         <span className="text-blue-700 font-bold truncate block">
                           {evt.serverMetadata.forwardedFor || evt.serverMetadata.realIp || "Direct"}
