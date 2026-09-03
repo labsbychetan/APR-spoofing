@@ -5,28 +5,21 @@ import Link from "next/link";
 import {
   Activity,
   Search,
-  Filter,
   RefreshCw,
   Smartphone,
   Laptop,
-  Tablet,
   Globe,
   Clock,
   Shield,
   Trash2,
-  ExternalLink,
-  PlusCircle,
   Copy,
   Check,
   X,
-  Server,
-  Monitor,
   Cpu,
   Layers,
-  Info,
 } from "lucide-react";
 import { TelemetryRecord, TelemetryStats } from "@/lib/types/telemetry";
-import { formatDate, formatFullDate, truncate } from "@/lib/utils";
+import { formatDate } from "@/lib/utils";
 
 export default function SOCDashboardPage() {
   const [events, setEvents] = useState<TelemetryRecord[]>([]);
@@ -52,7 +45,6 @@ export default function SOCDashboardPage() {
         const data = await res.json();
         setEvents(data.events || []);
         setStats(data.stats || null);
-        // If an event is selected, keep it synced if possible
         if (selectedEvent) {
           const updated = (data.events as TelemetryRecord[]).find((e) => e.id === selectedEvent.id);
           if (updated) setSelectedEvent(updated);
@@ -166,20 +158,20 @@ export default function SOCDashboardPage() {
   };
 
   return (
-    <div className="flex-1 max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-8 space-y-8">
+    <div className="flex-1 max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-8 space-y-8 bg-slate-50">
       
       {/* Top Header & Controls */}
-      <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 border-b border-border-subtle pb-6">
+      <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 border-b border-slate-200 pb-6">
         <div className="space-y-1">
           <div className="flex items-center gap-2">
-            <div className="p-1.5 rounded bg-cyber-emerald/10 text-cyber-emerald border border-cyber-emerald/30">
+            <div className="p-2 rounded-xl bg-blue-50 text-blue-600 border border-blue-200">
               <Activity className="w-5 h-5" />
             </div>
-            <h1 className="text-2xl sm:text-3xl font-bold text-slate-100 tracking-tight">
+            <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
               SOC Telemetry Analyst Console
             </h1>
           </div>
-          <p className="text-xs sm:text-sm text-slate-400">
+          <p className="text-xs sm:text-sm text-slate-600">
             Live instructor analysis stream. Inspect benign device telemetry, compare HTTP client headers, and evaluate request characteristics.
           </p>
         </div>
@@ -187,20 +179,22 @@ export default function SOCDashboardPage() {
         {/* Action Controls */}
         <div className="flex flex-wrap items-center gap-2.5">
           <button
+            type="button"
             onClick={() => setAutoRefresh(!autoRefresh)}
-            className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium border transition-colors ${
+            className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold border transition-colors shadow-soft ${
               autoRefresh
-                ? "bg-cyber-emerald/10 text-cyber-emerald border-cyber-emerald/30"
-                : "bg-surface-100 text-slate-400 border-border-subtle hover:bg-surface-50"
+                ? "bg-emerald-50 text-emerald-700 border-emerald-200"
+                : "bg-white text-slate-600 border-slate-300 hover:bg-slate-50"
             }`}
           >
-            <span className={`w-2 h-2 rounded-full ${autoRefresh ? "bg-cyber-emerald animate-pulse" : "bg-slate-500"}`} />
+            <span className={`w-2 h-2 rounded-full ${autoRefresh ? "bg-emerald-500 animate-pulse" : "bg-slate-400"}`} />
             <span>{autoRefresh ? "Live Polling Active" : "Polling Paused"}</span>
           </button>
 
           <button
+            type="button"
             onClick={() => fetchEvents()}
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium bg-surface-100 text-slate-300 hover:bg-surface-50 border border-border-subtle"
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium bg-white text-slate-700 hover:bg-slate-50 border border-slate-300 shadow-soft"
             title="Refresh feed"
           >
             <RefreshCw className={`w-3.5 h-3.5 ${isLoading ? "animate-spin" : ""}`} />
@@ -208,25 +202,28 @@ export default function SOCDashboardPage() {
           </button>
 
           {/* Synthetic injector for testing different profiles */}
-          <div className="hidden sm:flex items-center gap-1 bg-surface-100 p-1 rounded-lg border border-border-subtle">
-            <span className="text-[10px] font-mono text-slate-500 px-1.5">SIMULATE:</span>
+          <div className="hidden sm:flex items-center gap-1 bg-white p-1 rounded-lg border border-slate-200 shadow-soft">
+            <span className="text-[10px] font-mono font-semibold text-slate-400 px-1.5">SIMULATE:</span>
             <button
+              type="button"
               onClick={() => handleSimulateSyntheticEvent("mobile")}
-              className="px-2 py-0.5 rounded text-[11px] bg-surface-200 hover:bg-surface-50 text-cyber-blue border border-border-subtle"
+              className="px-2 py-0.5 rounded text-[11px] font-medium bg-blue-50 hover:bg-blue-100 text-blue-700 border border-blue-200 transition-colors"
             >
               + iOS Mobile
             </button>
             <button
+              type="button"
               onClick={() => handleSimulateSyntheticEvent("desktop")}
-              className="px-2 py-0.5 rounded text-[11px] bg-surface-200 hover:bg-surface-50 text-cyber-purple border border-border-subtle"
+              className="px-2 py-0.5 rounded text-[11px] font-medium bg-purple-50 hover:bg-purple-100 text-purple-700 border border-purple-200 transition-colors"
             >
               + Linux Desktop
             </button>
           </div>
 
           <button
+            type="button"
             onClick={handleClearData}
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium text-cyber-rose bg-cyber-rose/10 hover:bg-cyber-rose/20 border border-cyber-rose/30 transition-colors"
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold text-rose-700 bg-rose-50 hover:bg-rose-100 border border-rose-200 transition-colors shadow-soft"
           >
             <Trash2 className="w-3.5 h-3.5" />
             <span>Clear Feed</span>
@@ -237,81 +234,82 @@ export default function SOCDashboardPage() {
       {/* Metrics Bar */}
       {stats && (
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
-          <div className="p-4 rounded-xl bg-surface-100 border border-border-subtle space-y-1">
-            <div className="flex items-center justify-between text-slate-400">
-              <span className="text-xs">Total Events</span>
-              <Layers className="w-4 h-4 text-cyber-blue" />
+          <div className="p-4 rounded-2xl bg-white border border-slate-200 shadow-soft space-y-1">
+            <div className="flex items-center justify-between text-slate-500">
+              <span className="text-xs font-medium">Total Events</span>
+              <Layers className="w-4 h-4 text-blue-600" />
             </div>
-            <p className="text-2xl font-bold font-mono text-slate-100">{stats.totalEvents}</p>
-            <span className="text-[10px] text-slate-500 block">Session buffer</span>
+            <p className="text-2xl font-extrabold font-mono text-slate-900">{stats.totalEvents}</p>
+            <span className="text-[10px] text-slate-400 block font-medium">Session buffer</span>
           </div>
 
-          <div className="p-4 rounded-xl bg-surface-100 border border-border-subtle space-y-1">
-            <div className="flex items-center justify-between text-slate-400">
-              <span className="text-xs">Mobile Devices</span>
-              <Smartphone className="w-4 h-4 text-cyber-cyan" />
+          <div className="p-4 rounded-2xl bg-white border border-slate-200 shadow-soft space-y-1">
+            <div className="flex items-center justify-between text-slate-500">
+              <span className="text-xs font-medium">Mobile Devices</span>
+              <Smartphone className="w-4 h-4 text-cyan-600" />
             </div>
-            <p className="text-2xl font-bold font-mono text-cyber-cyan">{stats.mobileEvents}</p>
-            <span className="text-[10px] text-slate-500 block">Touch / High-DPR</span>
+            <p className="text-2xl font-extrabold font-mono text-cyan-700">{stats.mobileEvents}</p>
+            <span className="text-[10px] text-slate-400 block font-medium">Touch / High-DPR</span>
           </div>
 
-          <div className="p-4 rounded-xl bg-surface-100 border border-border-subtle space-y-1">
-            <div className="flex items-center justify-between text-slate-400">
-              <span className="text-xs">Workstations</span>
-              <Laptop className="w-4 h-4 text-cyber-purple" />
+          <div className="p-4 rounded-2xl bg-white border border-slate-200 shadow-soft space-y-1">
+            <div className="flex items-center justify-between text-slate-500">
+              <span className="text-xs font-medium">Workstations</span>
+              <Laptop className="w-4 h-4 text-purple-600" />
             </div>
-            <p className="text-2xl font-bold font-mono text-cyber-purple">{stats.desktopEvents}</p>
-            <span className="text-[10px] text-slate-500 block">Desktop / Laptop</span>
+            <p className="text-2xl font-extrabold font-mono text-purple-700">{stats.desktopEvents}</p>
+            <span className="text-[10px] text-slate-400 block font-medium">Desktop / Laptop</span>
           </div>
 
-          <div className="p-4 rounded-xl bg-surface-100 border border-border-subtle space-y-1">
-            <div className="flex items-center justify-between text-slate-400">
-              <span className="text-xs">Browsers</span>
-              <Globe className="w-4 h-4 text-cyber-emerald" />
+          <div className="p-4 rounded-2xl bg-white border border-slate-200 shadow-soft space-y-1">
+            <div className="flex items-center justify-between text-slate-500">
+              <span className="text-xs font-medium">Browsers</span>
+              <Globe className="w-4 h-4 text-emerald-600" />
             </div>
-            <p className="text-2xl font-bold font-mono text-slate-100">
+            <p className="text-2xl font-extrabold font-mono text-slate-900">
               {Object.keys(stats.browserDistribution).length}
             </p>
-            <span className="text-[10px] text-slate-500 block">Distinct families</span>
+            <span className="text-[10px] text-slate-400 block font-medium">Distinct families</span>
           </div>
 
-          <div className="p-4 rounded-xl bg-surface-100 border border-border-subtle space-y-1">
-            <div className="flex items-center justify-between text-slate-400">
-              <span className="text-xs">OS Families</span>
-              <Cpu className="w-4 h-4 text-cyber-amber" />
+          <div className="p-4 rounded-2xl bg-white border border-slate-200 shadow-soft space-y-1">
+            <div className="flex items-center justify-between text-slate-500">
+              <span className="text-xs font-medium">OS Families</span>
+              <Cpu className="w-4 h-4 text-amber-600" />
             </div>
-            <p className="text-2xl font-bold font-mono text-slate-100">
+            <p className="text-2xl font-extrabold font-mono text-slate-900">
               {Object.keys(stats.osDistribution).length}
             </p>
-            <span className="text-[10px] text-slate-500 block">Operating systems</span>
+            <span className="text-[10px] text-slate-400 block font-medium">Operating systems</span>
           </div>
 
-          <div className="p-4 rounded-xl bg-surface-100 border border-border-subtle space-y-1">
-            <div className="flex items-center justify-between text-slate-400">
-              <span className="text-xs">Recent (1h)</span>
-              <Clock className="w-4 h-4 text-cyber-blue" />
+          <div className="p-4 rounded-2xl bg-white border border-slate-200 shadow-soft space-y-1">
+            <div className="flex items-center justify-between text-slate-500">
+              <span className="text-xs font-medium">Recent (1h)</span>
+              <Clock className="w-4 h-4 text-blue-600" />
             </div>
-            <p className="text-2xl font-bold font-mono text-slate-100">{stats.recentRequests}</p>
-            <span className="text-[10px] text-slate-500 block">Activity velocity</span>
+            <p className="text-2xl font-extrabold font-mono text-slate-900">{stats.recentRequests}</p>
+            <span className="text-[10px] text-slate-400 block font-medium">Activity velocity</span>
           </div>
         </div>
       )}
 
       {/* Search & Filter Toolbar */}
-      <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 bg-surface-100 p-3 rounded-xl border border-border-subtle">
+      <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 bg-white p-3 rounded-2xl border border-slate-200 shadow-soft">
         <div className="relative flex-1">
-          <Search className="w-4 h-4 text-slate-500 absolute left-3 top-1/2 -translate-y-1/2" />
+          <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
           <input
             type="text"
             placeholder="Search events by IP, User-Agent, OS, Timezone, or Event ID..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full bg-surface-200 border border-border-subtle rounded-lg pl-9 pr-4 py-1.5 text-xs text-slate-100 placeholder-slate-500 focus:outline-none focus:border-cyber-blue"
+            className="w-full bg-slate-50 border border-slate-200 rounded-xl pl-9 pr-4 py-2 text-xs text-slate-800 placeholder-slate-400 focus:outline-none focus:border-blue-500 focus:bg-white transition-colors"
           />
           {searchQuery && (
             <button
+              type="button"
               onClick={() => setSearchQuery("")}
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-300"
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
             >
               <X className="w-3.5 h-3.5" />
             </button>
@@ -322,7 +320,7 @@ export default function SOCDashboardPage() {
           <select
             value={deviceFilter}
             onChange={(e) => setDeviceFilter(e.target.value)}
-            className="bg-surface-200 border border-border-subtle rounded-lg px-3 py-1.5 text-xs text-slate-200 focus:outline-none focus:border-cyber-blue"
+            className="bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs text-slate-700 font-medium focus:outline-none focus:border-blue-500"
           >
             <option value="all">All Devices</option>
             <option value="mobile">Mobile Only</option>
@@ -333,7 +331,7 @@ export default function SOCDashboardPage() {
           <select
             value={browserFilter}
             onChange={(e) => setBrowserFilter(e.target.value)}
-            className="bg-surface-200 border border-border-subtle rounded-lg px-3 py-1.5 text-xs text-slate-200 focus:outline-none focus:border-cyber-blue"
+            className="bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs text-slate-700 font-medium focus:outline-none focus:border-blue-500"
           >
             <option value="all">All Browsers</option>
             <option value="Chrome">Chrome</option>
@@ -351,7 +349,7 @@ export default function SOCDashboardPage() {
         {/* Left / Main: Live Event Table / List */}
         <div className={`space-y-3 ${selectedEvent ? "lg:col-span-7" : "lg:col-span-12"}`}>
           <div className="flex items-center justify-between">
-            <span className="text-xs font-mono text-slate-400">
+            <span className="text-xs font-mono font-semibold text-slate-500">
               SHOWING {events.length} RECORDED EVENT{events.length === 1 ? "" : "S"}
             </span>
             <span className="text-[11px] text-slate-500">
@@ -360,21 +358,21 @@ export default function SOCDashboardPage() {
           </div>
 
           {events.length === 0 ? (
-            <div className="p-12 text-center rounded-xl bg-surface-100 border border-dashed border-border-subtle space-y-3">
-              <Activity className="w-8 h-8 text-slate-600 mx-auto" />
-              <p className="text-sm text-slate-300 font-medium">No Telemetry Events Recorded</p>
+            <div className="p-12 text-center rounded-2xl bg-white border border-dashed border-slate-300 space-y-3 shadow-soft">
+              <Activity className="w-8 h-8 text-slate-400 mx-auto" />
+              <p className="text-sm text-slate-800 font-bold">No Telemetry Events Recorded</p>
               <p className="text-xs text-slate-500 max-w-sm mx-auto">
                 No telemetry packets match your current filter. Run a consent demo or use the simulate button above.
               </p>
               <Link
                 href="/consent"
-                className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg text-xs font-semibold bg-cyber-blue text-slate-950 hover:bg-sky-300"
+                className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg text-xs font-semibold bg-blue-600 text-white hover:bg-blue-700 shadow-sm"
               >
                 Trigger New Telemetry Event
               </Link>
             </div>
           ) : (
-            <div className="space-y-2">
+            <div className="space-y-2.5">
               {events.map((evt) => {
                 const isSelected = selectedEvent?.id === evt.id;
                 const dev = evt.clientTelemetry.browser.deviceCategory;
@@ -384,30 +382,30 @@ export default function SOCDashboardPage() {
                   <div
                     key={evt.id}
                     onClick={() => setSelectedEvent(evt)}
-                    className={`p-4 rounded-xl border transition-all cursor-pointer space-y-2.5 ${
+                    className={`p-4 rounded-2xl border transition-all cursor-pointer space-y-2.5 ${
                       isSelected
-                        ? "bg-surface-50 border-cyber-blue shadow-lg"
-                        : "bg-surface-100 hover:bg-surface-50/80 border-border-subtle"
+                        ? "bg-blue-50/50 border-blue-400 shadow-md ring-1 ring-blue-400"
+                        : "bg-white hover:bg-slate-50/90 border-slate-200 shadow-soft"
                     }`}
                   >
                     <div className="flex items-center justify-between gap-2">
                       <div className="flex items-center gap-2 font-mono text-xs">
-                        <span className="text-slate-400">{formatDate(evt.timestamp)}</span>
-                        <span className="text-slate-600">•</span>
-                        <span className="text-cyber-blue font-semibold">{evt.id}</span>
+                        <span className="text-slate-500">{formatDate(evt.timestamp)}</span>
+                        <span className="text-slate-300">•</span>
+                        <span className="text-blue-700 font-bold">{evt.id}</span>
                       </div>
 
                       <div className="flex items-center gap-2">
                         <span
-                          className={`text-[10px] font-mono px-2 py-0.5 rounded font-semibold border ${
+                          className={`text-[10px] font-mono px-2 py-0.5 rounded-full font-bold border ${
                             isMobile
-                              ? "bg-cyber-cyan/10 text-cyber-cyan border-cyber-cyan/30"
-                              : "bg-cyber-purple/10 text-cyber-purple border-cyber-purple/30"
+                              ? "bg-cyan-50 text-cyan-800 border-cyan-200"
+                              : "bg-purple-50 text-purple-800 border-purple-200"
                           }`}
                         >
                           {dev.toUpperCase()}
                         </span>
-                        <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-surface-200 text-slate-300 border border-border-subtle">
+                        <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-slate-100 text-slate-700 border border-slate-200 font-medium">
                           {evt.clientTelemetry.browser.osFamily}
                         </span>
                       </div>
@@ -415,29 +413,29 @@ export default function SOCDashboardPage() {
 
                     <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs font-mono">
                       <div>
-                        <span className="text-slate-500 text-[10px] block">BROWSER:</span>
-                        <span className="text-slate-200 truncate block">
+                        <span className="text-slate-400 text-[10px] block font-sans font-medium">BROWSER:</span>
+                        <span className="text-slate-900 font-semibold truncate block">
                           {evt.clientTelemetry.browser.family}
                         </span>
                       </div>
 
                       <div>
-                        <span className="text-slate-500 text-[10px] block">SCREEN / VIEWPORT:</span>
-                        <span className="text-slate-300 truncate block">
+                        <span className="text-slate-400 text-[10px] block font-sans font-medium">SCREEN / VIEWPORT:</span>
+                        <span className="text-slate-700 truncate block">
                           {evt.clientTelemetry.display.screenWidth}x{evt.clientTelemetry.display.screenHeight} ({evt.clientTelemetry.display.viewportWidth}x{evt.clientTelemetry.display.viewportHeight})
                         </span>
                       </div>
 
                       <div>
-                        <span className="text-slate-500 text-[10px] block">TIMEZONE / LOCALE:</span>
-                        <span className="text-slate-300 truncate block">
+                        <span className="text-slate-400 text-[10px] block font-sans font-medium">TIMEZONE / LOCALE:</span>
+                        <span className="text-slate-700 truncate block">
                           {evt.clientTelemetry.browser.timezone} ({evt.clientTelemetry.browser.language})
                         </span>
                       </div>
 
                       <div>
-                        <span className="text-slate-500 text-[10px] block">NETWORK PROXY IP:</span>
-                        <span className="text-cyber-cyan truncate block">
+                        <span className="text-slate-400 text-[10px] block font-sans font-medium">NETWORK PROXY IP:</span>
+                        <span className="text-blue-700 font-bold truncate block">
                           {evt.serverMetadata.forwardedFor || evt.serverMetadata.realIp || "Direct"}
                         </span>
                       </div>
@@ -451,33 +449,35 @@ export default function SOCDashboardPage() {
 
         {/* Right: Event Inspector Panel */}
         {selectedEvent && (
-          <div className="lg:col-span-5 p-5 rounded-xl bg-surface-100 border border-border-highlight space-y-5 sticky top-24 shadow-2xl">
+          <div className="lg:col-span-5 p-6 rounded-2xl bg-white border border-slate-200 space-y-5 sticky top-24 shadow-card">
             
             {/* Inspector Header */}
-            <div className="flex items-start justify-between gap-2 border-b border-border-subtle pb-4">
+            <div className="flex items-start justify-between gap-2 border-b border-slate-100 pb-4">
               <div className="space-y-1">
                 <div className="flex items-center gap-2">
-                  <Shield className="w-4 h-4 text-cyber-blue" />
-                  <span className="text-xs font-mono font-bold uppercase text-slate-200">
+                  <Shield className="w-4 h-4 text-blue-600" />
+                  <span className="text-xs font-mono font-bold uppercase text-slate-800">
                     SOC Event Deep-Dive
                   </span>
                 </div>
-                <p className="text-xs font-mono text-cyber-blue">
+                <p className="text-xs font-mono font-bold text-blue-700">
                   {selectedEvent.id}
                 </p>
               </div>
 
               <div className="flex items-center gap-1">
                 <button
+                  type="button"
                   onClick={copyEventJson}
-                  className="p-1.5 rounded bg-surface-200 hover:bg-surface-50 text-slate-300 border border-border-subtle text-xs"
+                  className="p-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-200 text-xs"
                   title="Copy JSON Record"
                 >
-                  {copiedJson ? <Check className="w-3.5 h-3.5 text-cyber-emerald" /> : <Copy className="w-3.5 h-3.5" />}
+                  {copiedJson ? <Check className="w-3.5 h-3.5 text-emerald-600" /> : <Copy className="w-3.5 h-3.5" />}
                 </button>
                 <button
+                  type="button"
                   onClick={() => setSelectedEvent(null)}
-                  className="p-1.5 rounded bg-surface-200 hover:bg-surface-50 text-slate-400 hover:text-slate-200 border border-border-subtle"
+                  className="p-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-500 hover:text-slate-800 border border-slate-200"
                 >
                   <X className="w-3.5 h-3.5" />
                 </button>
@@ -485,43 +485,47 @@ export default function SOCDashboardPage() {
             </div>
 
             {/* Inspector Navigation Tabs */}
-            <div className="flex items-center gap-1 border-b border-border-subtle pb-2">
+            <div className="flex items-center gap-1 border-b border-slate-100 pb-2">
               <button
+                type="button"
                 onClick={() => setDetailTab("overview")}
-                className={`px-2.5 py-1 rounded text-xs font-medium ${
+                className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors ${
                   detailTab === "overview"
-                    ? "bg-surface-200 text-cyber-blue border border-border-highlight"
-                    : "text-slate-400 hover:text-slate-200"
+                    ? "bg-slate-100 text-blue-700 border border-slate-200"
+                    : "text-slate-600 hover:text-slate-900"
                 }`}
               >
                 Summary
               </button>
               <button
+                type="button"
                 onClick={() => setDetailTab("browser")}
-                className={`px-2.5 py-1 rounded text-xs font-medium ${
+                className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors ${
                   detailTab === "browser"
-                    ? "bg-surface-200 text-cyber-blue border border-border-highlight"
-                    : "text-slate-400 hover:text-slate-200"
+                    ? "bg-slate-100 text-blue-700 border border-slate-200"
+                    : "text-slate-600 hover:text-slate-900"
                 }`}
               >
                 Client DOM
               </button>
               <button
+                type="button"
                 onClick={() => setDetailTab("server")}
-                className={`px-2.5 py-1 rounded text-xs font-medium ${
+                className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors ${
                   detailTab === "server"
-                    ? "bg-surface-200 text-cyber-blue border border-border-highlight"
-                    : "text-slate-400 hover:text-slate-200"
+                    ? "bg-slate-100 text-blue-700 border border-slate-200"
+                    : "text-slate-600 hover:text-slate-900"
                 }`}
               >
                 Server Headers
               </button>
               <button
+                type="button"
                 onClick={() => setDetailTab("json")}
-                className={`px-2.5 py-1 rounded text-xs font-medium ${
+                className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors ${
                   detailTab === "json"
-                    ? "bg-surface-200 text-cyber-blue border border-border-highlight"
-                    : "text-slate-400 hover:text-slate-200"
+                    ? "bg-slate-100 text-blue-700 border border-slate-200"
+                    : "text-slate-600 hover:text-slate-900"
                 }`}
               >
                 Raw JSON
@@ -531,35 +535,35 @@ export default function SOCDashboardPage() {
             {/* Tab 1: Analysis Summary */}
             {detailTab === "overview" && (
               <div className="space-y-4 text-xs font-mono">
-                <div className="p-3 rounded-lg bg-surface-200 border border-border-subtle space-y-2">
-                  <div className="flex items-center gap-2 text-cyber-emerald">
-                    <Shield className="w-3.5 h-3.5" />
-                    <span className="font-semibold uppercase text-[11px]">SOC Assessment</span>
+                <div className="p-3.5 rounded-xl bg-emerald-50/70 border border-emerald-200 space-y-2">
+                  <div className="flex items-center gap-2 text-emerald-800">
+                    <Shield className="w-3.5 h-3.5 text-emerald-600" />
+                    <span className="font-bold uppercase text-[11px]">SOC Assessment</span>
                   </div>
-                  <p className="text-slate-300 leading-relaxed font-sans text-xs">
+                  <p className="text-slate-700 leading-relaxed font-sans text-xs">
                     {selectedEvent.analysis.identificationPotential}
                   </p>
                 </div>
 
                 <div className="space-y-2">
-                  <span className="text-slate-400 text-[11px] block font-sans font-semibold">
+                  <span className="text-slate-600 text-[11px] block font-sans font-bold">
                     Telemetry Observations:
                   </span>
-                  <ul className="space-y-1.5 text-slate-300 font-sans text-xs">
+                  <ul className="space-y-1.5 text-slate-700 font-sans text-xs">
                     {selectedEvent.analysis.summaryPoints.map((pt, i) => (
                       <li key={i} className="flex items-start gap-2">
-                        <span className="text-cyber-blue mt-0.5">•</span>
+                        <span className="text-blue-600 font-bold mt-0.5">•</span>
                         <span>{pt}</span>
                       </li>
                     ))}
                   </ul>
                 </div>
 
-                <div className="p-3 rounded-lg bg-surface-300 border border-cyber-amber/30 space-y-1 font-sans">
-                  <span className="text-cyber-amber font-semibold text-[11px] block">
+                <div className="p-3.5 rounded-xl bg-amber-50/70 border border-amber-200 space-y-1 font-sans">
+                  <span className="text-amber-900 font-bold text-[11px] block">
                     Important Analytical Caveat:
                   </span>
-                  <p className="text-slate-400 text-[11px] leading-relaxed">
+                  <p className="text-slate-600 text-[11px] leading-relaxed">
                     While these attributes reveal device capabilities, display metrics, and language preferences, they do NOT constitute identity or physical address.
                   </p>
                 </div>
@@ -569,35 +573,35 @@ export default function SOCDashboardPage() {
             {/* Tab 2: Browser Telemetry */}
             {detailTab === "browser" && (
               <div className="space-y-3 text-xs font-mono max-h-96 overflow-y-auto pr-1">
-                <div className="p-2.5 rounded bg-surface-200 border border-border-subtle space-y-1">
-                  <span className="text-slate-500 text-[10px]">USER AGENT (DOM):</span>
-                  <p className="text-slate-300 break-all text-[11px]">
+                <div className="p-3 rounded-xl bg-slate-50 border border-slate-200 space-y-1">
+                  <span className="text-slate-400 text-[10px] font-sans font-semibold">USER AGENT (DOM):</span>
+                  <p className="text-slate-800 break-all text-[11px]">
                     {selectedEvent.clientTelemetry.browser.userAgent}
                   </p>
                 </div>
 
                 <div className="grid grid-cols-2 gap-2">
-                  <div className="p-2 rounded bg-surface-200 border border-border-subtle">
-                    <span className="text-slate-500 text-[10px]">SCREEN DIMENSIONS:</span>
-                    <p className="text-slate-200">{selectedEvent.clientTelemetry.display.screenWidth} x {selectedEvent.clientTelemetry.display.screenHeight}</p>
+                  <div className="p-2.5 rounded-xl bg-slate-50 border border-slate-200">
+                    <span className="text-slate-400 text-[10px] font-sans font-semibold">SCREEN DIMENSIONS:</span>
+                    <p className="text-slate-900 font-bold">{selectedEvent.clientTelemetry.display.screenWidth} x {selectedEvent.clientTelemetry.display.screenHeight}</p>
                   </div>
-                  <div className="p-2 rounded bg-surface-200 border border-border-subtle">
-                    <span className="text-slate-500 text-[10px]">DEVICE PIXEL RATIO:</span>
-                    <p className="text-slate-200">{selectedEvent.clientTelemetry.display.devicePixelRatio}</p>
+                  <div className="p-2.5 rounded-xl bg-slate-50 border border-slate-200">
+                    <span className="text-slate-400 text-[10px] font-sans font-semibold">DEVICE PIXEL RATIO:</span>
+                    <p className="text-slate-900 font-bold">{selectedEvent.clientTelemetry.display.devicePixelRatio}</p>
                   </div>
-                  <div className="p-2 rounded bg-surface-200 border border-border-subtle">
-                    <span className="text-slate-500 text-[10px]">TOUCH POINTS:</span>
-                    <p className="text-slate-200">{selectedEvent.clientTelemetry.capabilities.touchSupportPoints}</p>
+                  <div className="p-2.5 rounded-xl bg-slate-50 border border-slate-200">
+                    <span className="text-slate-400 text-[10px] font-sans font-semibold">TOUCH POINTS:</span>
+                    <p className="text-slate-900 font-bold">{selectedEvent.clientTelemetry.capabilities.touchSupportPoints}</p>
                   </div>
-                  <div className="p-2 rounded bg-surface-200 border border-border-subtle">
-                    <span className="text-slate-500 text-[10px]">CPU CONCURRENCY:</span>
-                    <p className="text-slate-200">{selectedEvent.clientTelemetry.capabilities.hardwareConcurrency || "N/A"}</p>
+                  <div className="p-2.5 rounded-xl bg-slate-50 border border-slate-200">
+                    <span className="text-slate-400 text-[10px] font-sans font-semibold">CPU CONCURRENCY:</span>
+                    <p className="text-slate-900 font-bold">{selectedEvent.clientTelemetry.capabilities.hardwareConcurrency || "N/A"}</p>
                   </div>
                 </div>
 
-                <div className="p-2.5 rounded bg-surface-200 border border-border-subtle space-y-1">
-                  <span className="text-slate-500 text-[10px]">PERFORMANCE TIMING:</span>
-                  <p className="text-slate-300 text-[11px]">
+                <div className="p-3 rounded-xl bg-slate-50 border border-slate-200 space-y-1">
+                  <span className="text-slate-400 text-[10px] font-sans font-semibold">PERFORMANCE TIMING:</span>
+                  <p className="text-slate-700 text-[11px]">
                     Load: {selectedEvent.clientTelemetry.timing.pageLoadDurationMs ? `${selectedEvent.clientTelemetry.timing.pageLoadDurationMs}ms` : "N/A"} | DOM: {selectedEvent.clientTelemetry.timing.domInteractiveMs ? `${selectedEvent.clientTelemetry.timing.domInteractiveMs}ms` : "N/A"}
                   </p>
                 </div>
@@ -607,33 +611,33 @@ export default function SOCDashboardPage() {
             {/* Tab 3: Server Request Metadata */}
             {detailTab === "server" && (
               <div className="space-y-3 text-xs font-mono max-h-96 overflow-y-auto pr-1">
-                <div className="p-2.5 rounded bg-surface-200 border border-border-subtle space-y-1">
-                  <span className="text-slate-500 text-[10px]">HTTP REQUEST LINE:</span>
-                  <p className="text-cyber-cyan font-semibold">
+                <div className="p-3 rounded-xl bg-slate-50 border border-slate-200 space-y-1">
+                  <span className="text-slate-400 text-[10px] font-sans font-semibold">HTTP REQUEST LINE:</span>
+                  <p className="text-blue-700 font-bold">
                     {selectedEvent.serverMetadata.httpMethod} {selectedEvent.serverMetadata.requestPath} ({selectedEvent.serverMetadata.protocol?.toUpperCase()})
                   </p>
                 </div>
 
-                <div className="p-2.5 rounded bg-surface-200 border border-border-subtle space-y-1">
-                  <span className="text-slate-500 text-[10px]">ACCEPT-LANGUAGE:</span>
-                  <p className="text-slate-300">{selectedEvent.serverMetadata.acceptLanguageHeader || "N/A"}</p>
+                <div className="p-3 rounded-xl bg-slate-50 border border-slate-200 space-y-1">
+                  <span className="text-slate-400 text-[10px] font-sans font-semibold">ACCEPT-LANGUAGE:</span>
+                  <p className="text-slate-700">{selectedEvent.serverMetadata.acceptLanguageHeader || "N/A"}</p>
                 </div>
 
-                <div className="p-2.5 rounded bg-surface-200 border border-border-subtle space-y-1">
-                  <span className="text-slate-500 text-[10px]">SEC-CH-UA CLIENT HINTS:</span>
-                  <p className="text-slate-300 break-all text-[11px]">{selectedEvent.serverMetadata.secChUa || "Not provided by browser"}</p>
+                <div className="p-3 rounded-xl bg-slate-50 border border-slate-200 space-y-1">
+                  <span className="text-slate-400 text-[10px] font-sans font-semibold">SEC-CH-UA CLIENT HINTS:</span>
+                  <p className="text-slate-700 break-all text-[11px]">{selectedEvent.serverMetadata.secChUa || "Not provided by browser"}</p>
                 </div>
 
-                <div className="p-2.5 rounded bg-surface-200 border border-border-subtle space-y-1">
-                  <span className="text-slate-500 text-[10px]">FORWARDED FOR (PROXY/CDN):</span>
-                  <p className="text-cyber-emerald">{selectedEvent.serverMetadata.forwardedFor || selectedEvent.serverMetadata.realIp || "Direct Connection"}</p>
+                <div className="p-3 rounded-xl bg-slate-50 border border-slate-200 space-y-1">
+                  <span className="text-slate-400 text-[10px] font-sans font-semibold">FORWARDED FOR (PROXY/CDN):</span>
+                  <p className="text-emerald-700 font-bold">{selectedEvent.serverMetadata.forwardedFor || selectedEvent.serverMetadata.realIp || "Direct Connection"}</p>
                 </div>
               </div>
             )}
 
             {/* Tab 4: Raw JSON */}
             {detailTab === "json" && (
-              <pre className="p-3 rounded bg-surface-300 text-[11px] font-mono text-slate-300 overflow-x-auto border border-border-subtle max-h-96">
+              <pre className="p-3.5 rounded-xl bg-slate-50 text-[11px] font-mono text-slate-800 overflow-x-auto border border-slate-200 max-h-96">
                 {JSON.stringify(selectedEvent, null, 2)}
               </pre>
             )}

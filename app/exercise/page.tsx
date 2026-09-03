@@ -4,17 +4,10 @@ import { useState } from "react";
 import Link from "next/link";
 import {
   CheckSquare,
-  HelpCircle,
-  CheckCircle2,
-  XCircle,
   ShieldCheck,
-  ShieldAlert,
   ArrowRight,
   RotateCcw,
   Award,
-  BookOpen,
-  Layers,
-  ChevronRight,
 } from "lucide-react";
 import { QuizQuestion } from "@/lib/types/telemetry";
 
@@ -269,41 +262,41 @@ export default function StudentExercisePage() {
   };
 
   return (
-    <div className="flex-1 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-10">
+    <div className="flex-1 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-10 bg-slate-50">
       
       {/* Header */}
-      <div className="space-y-2 border-b border-border-subtle pb-6">
-        <div className="flex items-center gap-2 text-xs font-mono text-slate-400">
-          <Link href="/" className="hover:text-cyber-blue">Lab Overview</Link>
+      <div className="space-y-2 border-b border-slate-200 pb-6">
+        <div className="flex items-center gap-2 text-xs font-mono text-slate-500">
+          <Link href="/" className="hover:text-blue-600 font-medium">Lab Overview</Link>
           <span>/</span>
-          <span className="text-slate-200">Student Exercise</span>
+          <span className="text-slate-800 font-semibold">Student Exercise</span>
         </div>
         <div className="flex items-center gap-3">
-          <div className="p-2 rounded-lg bg-cyber-emerald/10 text-cyber-emerald border border-cyber-emerald/30">
+          <div className="p-2.5 rounded-xl bg-emerald-50 text-emerald-600 border border-emerald-200">
             <CheckSquare className="w-6 h-6" />
           </div>
-          <h1 className="text-2xl sm:text-3xl font-bold text-slate-100 tracking-tight">
+          <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
             Practical Exercise: Web Telemetry Analysis
           </h1>
         </div>
-        <p className="text-sm text-slate-400 leading-relaxed">
+        <p className="text-sm text-slate-600 leading-relaxed">
           <strong>Scenario:</strong> A security operations team wants to analyze what technical information a web application can observe during a training session, and where the boundaries of privacy lie.
         </p>
       </div>
 
       {/* Score Summary Card (When submitted) */}
       {showResults && (
-        <div className="p-6 rounded-xl bg-surface-100 border border-cyber-emerald/40 space-y-5 shadow-2xl animate-fade-in">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-border-subtle pb-4">
-            <div className="flex items-center gap-3">
-              <div className="p-3 rounded-full bg-cyber-emerald/10 text-cyber-emerald border border-cyber-emerald/30">
-                <Award className="w-7 h-7" />
+        <div className="p-8 rounded-2xl bg-white border border-emerald-300 space-y-5 shadow-card animate-fade-in">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-100 pb-5">
+            <div className="flex items-center gap-4">
+              <div className="p-3.5 rounded-2xl bg-emerald-50 text-emerald-600 border border-emerald-200">
+                <Award className="w-8 h-8" />
               </div>
               <div>
-                <h2 className="text-lg font-bold text-slate-100">
+                <h2 className="text-xl font-extrabold text-slate-900">
                   Lab Assessment Score: {score} / {LAB_QUESTIONS.length}
                 </h2>
-                <p className="text-xs text-slate-400">
+                <p className="text-xs text-slate-500">
                   {score === 10
                     ? "Exemplary understanding of web telemetry and privacy boundaries."
                     : "Good effort! Review the detailed explanations below to reinforce key cybersecurity concepts."}
@@ -312,8 +305,9 @@ export default function StudentExercisePage() {
             </div>
 
             <button
+              type="button"
               onClick={handleReset}
-              className="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-semibold bg-surface-50 text-slate-200 hover:bg-surface-200 border border-border-subtle"
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-semibold bg-slate-100 text-slate-800 hover:bg-slate-200 border border-slate-300 transition-colors shadow-soft"
             >
               <RotateCcw className="w-3.5 h-3.5" />
               <span>Retake Exercise</span>
@@ -321,12 +315,12 @@ export default function StudentExercisePage() {
           </div>
 
           {/* Key Takeaway Box */}
-          <div className="p-4 rounded-lg bg-surface-200 border border-cyber-blue/30 space-y-2">
-            <div className="flex items-center gap-2 text-cyber-blue text-xs font-bold uppercase font-mono">
-              <ShieldCheck className="w-4 h-4" />
+          <div className="p-4 rounded-xl bg-blue-50/80 border border-blue-200 space-y-2">
+            <div className="flex items-center gap-2 text-blue-800 text-xs font-bold uppercase font-mono">
+              <ShieldCheck className="w-4 h-4 text-blue-600" />
               <span>Core Lesson Takeaway</span>
             </div>
-            <p className="text-xs text-slate-300 leading-relaxed">
+            <p className="text-xs text-slate-800 leading-relaxed">
               <strong>Technical telemetry can provide useful diagnostic and forensic clues, but individual fields should not automatically be interpreted as a person&apos;s identity or physical location.</strong>
             </p>
           </div>
@@ -334,7 +328,7 @@ export default function StudentExercisePage() {
       )}
 
       {/* Questions List */}
-      <div className="space-y-8">
+      <div className="space-y-6">
         {LAB_QUESTIONS.map((q) => {
           const selectedValue = answers[q.id];
           const isCorrect = q.options.find((o) => o.value === selectedValue)?.isCorrect;
@@ -342,33 +336,33 @@ export default function StudentExercisePage() {
           return (
             <div
               key={q.id}
-              className={`p-6 rounded-xl border space-y-4 transition-all ${
+              className={`p-6 rounded-2xl border space-y-4 transition-all shadow-soft ${
                 showResults
                   ? isCorrect
-                    ? "bg-surface-100 border-cyber-emerald/40"
-                    : "bg-surface-100 border-cyber-rose/40"
-                  : "bg-surface-100 border-border-subtle hover:border-border-highlight"
+                    ? "bg-white border-emerald-300 ring-1 ring-emerald-300"
+                    : "bg-white border-rose-300 ring-1 ring-rose-300"
+                  : "bg-white border-slate-200 hover:border-slate-300"
               }`}
             >
               <div className="space-y-1">
                 <div className="flex items-center justify-between">
-                  <span className="text-[11px] font-mono uppercase text-cyber-cyan font-semibold">
+                  <span className="text-[11px] font-mono uppercase text-blue-700 font-bold">
                     CATEGORY: {q.category.toUpperCase()}
                   </span>
                   {showResults && (
                     <span
-                      className={`text-xs font-semibold px-2 py-0.5 rounded font-mono ${
+                      className={`text-xs font-bold px-2.5 py-0.5 rounded-full font-mono ${
                         isCorrect
-                          ? "bg-cyber-emerald/10 text-cyber-emerald border border-cyber-emerald/30"
-                          : "bg-cyber-rose/10 text-cyber-rose border border-cyber-rose/30"
+                          ? "bg-emerald-50 text-emerald-800 border border-emerald-200"
+                          : "bg-rose-50 text-rose-800 border border-rose-200"
                       }`}
                     >
                       {isCorrect ? "CORRECT" : "INCORRECT"}
                     </span>
                   )}
                 </div>
-                <h2 className="text-base font-bold text-slate-100">{q.question}</h2>
-                <p className="text-xs text-slate-400">{q.description}</p>
+                <h2 className="text-base font-bold text-slate-900">{q.question}</h2>
+                <p className="text-xs text-slate-500">{q.description}</p>
               </div>
 
               {/* Options */}
@@ -381,17 +375,17 @@ export default function StudentExercisePage() {
                       type="button"
                       disabled={showResults}
                       onClick={() => handleSelectOption(q.id, opt.value)}
-                      className={`w-full text-left p-3.5 rounded-lg border text-xs leading-relaxed transition-all flex items-start gap-3 ${
+                      className={`w-full text-left p-3.5 rounded-xl border text-xs leading-relaxed transition-all flex items-start gap-3 ${
                         isOptionSelected
-                          ? "bg-surface-50 border-cyber-blue text-slate-100 shadow-sm"
-                          : "bg-surface-200 border-border-subtle text-slate-300 hover:bg-surface-50/60"
+                          ? "bg-blue-50 border-blue-500 text-blue-950 font-medium shadow-sm ring-1 ring-blue-500"
+                          : "bg-slate-50 border-slate-200 text-slate-700 hover:bg-slate-100"
                       }`}
                     >
                       <span
                         className={`w-5 h-5 rounded-full flex items-center justify-center font-mono text-[10px] shrink-0 border ${
                           isOptionSelected
-                            ? "bg-cyber-blue text-slate-950 border-cyber-blue font-bold"
-                            : "bg-surface-300 text-slate-400 border-border-subtle"
+                            ? "bg-blue-600 text-white border-blue-600 font-bold"
+                            : "bg-white text-slate-500 border-slate-300"
                         }`}
                       >
                         {opt.value}
@@ -404,11 +398,11 @@ export default function StudentExercisePage() {
 
               {/* Explanation (Shown upon submission) */}
               {showResults && (
-                <div className="p-3.5 rounded-lg bg-surface-300 border border-border-subtle space-y-1 text-xs">
-                  <span className="text-[11px] font-mono text-slate-400 font-semibold block">
+                <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-200 space-y-1 text-xs">
+                  <span className="text-[11px] font-mono text-slate-500 font-bold block">
                     ANALYTICAL EXPLANATION:
                   </span>
-                  <p className="text-slate-300 leading-relaxed">
+                  <p className="text-slate-700 leading-relaxed">
                     {q.options.find((o) => o.value === selectedValue)?.explanation ||
                       q.options.find((o) => o.isCorrect)?.explanation}
                   </p>
@@ -421,12 +415,12 @@ export default function StudentExercisePage() {
 
       {/* Bottom Submit Action */}
       {!showResults && (
-        <div className="p-6 rounded-xl bg-surface-100 border border-border-highlight flex flex-col sm:flex-row items-center justify-between gap-4">
+        <div className="p-6 rounded-2xl bg-white border border-slate-200 shadow-card flex flex-col sm:flex-row items-center justify-between gap-4">
           <div>
-            <p className="text-xs font-semibold text-slate-200">
+            <p className="text-xs font-bold text-slate-800">
               Answered: {Object.keys(answers).length} / {LAB_QUESTIONS.length} Questions
             </p>
-            <p className="text-[11px] text-slate-400">
+            <p className="text-[11px] text-slate-500">
               Complete all questions to grade your laboratory analysis.
             </p>
           </div>
@@ -435,7 +429,7 @@ export default function StudentExercisePage() {
             type="button"
             disabled={!allAnswered}
             onClick={() => setShowResults(true)}
-            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-2.5 rounded-lg text-xs font-semibold bg-cyber-blue hover:bg-sky-300 text-slate-950 disabled:opacity-50 transition-all shadow-md"
+            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-2.5 rounded-xl text-xs font-semibold bg-blue-600 hover:bg-blue-700 text-white disabled:opacity-50 transition-all shadow-md"
           >
             <span>Submit Lab Analysis</span>
             <ArrowRight className="w-3.5 h-3.5" />
@@ -444,13 +438,13 @@ export default function StudentExercisePage() {
       )}
 
       {/* Navigation to Defenses */}
-      <div className="pt-4 flex items-center justify-between border-t border-border-subtle text-xs">
-        <Link href="/dashboard" className="text-slate-400 hover:text-slate-200">
+      <div className="pt-4 flex items-center justify-between border-t border-slate-200 text-xs">
+        <Link href="/dashboard" className="text-slate-600 hover:text-blue-700 font-medium">
           ← Back to SOC Dashboard
         </Link>
         <Link
           href="/defenses"
-          className="inline-flex items-center gap-1.5 font-semibold text-cyber-blue hover:underline"
+          className="inline-flex items-center gap-1.5 font-bold text-blue-700 hover:underline"
         >
           <span>Continue to Defensive Hardening</span>
           <ArrowRight className="w-3.5 h-3.5" />

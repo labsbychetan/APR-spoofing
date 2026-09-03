@@ -11,25 +11,25 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        background: "#080c14",
+        background: "#f8fafc",
         surface: {
-          50: "#141c2e",
-          100: "#0f172a",
-          200: "#0b1220",
-          300: "#080d18",
+          50: "#ffffff",
+          100: "#f8fafc",
+          200: "#f1f5f9",
+          300: "#e2e8f0",
         },
         cyber: {
-          blue: "#38bdf8",
-          emerald: "#10b981",
-          amber: "#f59e0b",
-          rose: "#f43f5e",
-          purple: "#a855f7",
-          cyan: "#06b6d4",
+          blue: "#2563eb",
+          emerald: "#059669",
+          amber: "#d97706",
+          rose: "#e11d48",
+          purple: "#7c3aed",
+          cyan: "#0284c7",
         },
         border: {
-          subtle: "#1e293b",
-          highlight: "#334155",
-        }
+          subtle: "#e2e8f0",
+          highlight: "#cbd5e1",
+        },
       },
       fontFamily: {
         mono: [
@@ -41,24 +41,30 @@ const config: Config = {
           "Consolas",
           "Liberation Mono",
           "Courier New",
-          "monospace"
+          "monospace",
         ],
         sans: [
+          "Plus Jakarta Sans",
           "Inter",
           "-apple-system",
           "BlinkMacSystemFont",
           "Segoe UI",
           "Roboto",
-          "sans-serif"
+          "sans-serif",
         ],
+      },
+      boxShadow: {
+        soft: "0 1px 3px 0 rgba(0, 0, 0, 0.05), 0 1px 2px 0 rgba(0, 0, 0, 0.03)",
+        card: "0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03)",
+        elevated: "0 10px 15px -3px rgba(0, 0, 0, 0.06), 0 4px 6px -2px rgba(0, 0, 0, 0.03)",
       },
       animation: {
         "pulse-slow": "pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite",
-        "fade-in": "fadeIn 0.3s ease-in-out",
+        "fade-in": "fadeIn 0.25s ease-out",
       },
       keyframes: {
         fadeIn: {
-          "0%": { opacity: "0", transform: "translateY(4px)" },
+          "0%": { opacity: "0", transform: "translateY(3px)" },
           "100%": { opacity: "1", transform: "translateY(0)" },
         },
       },
